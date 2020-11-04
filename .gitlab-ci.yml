@@ -1,2 +1,16 @@
-include:
-        - template: Code-Quality.gitlab-ci.yml
+image: python:latest
+
+stages:
+    - coverage
+
+coverage:
+    stage: coverage
+    tags:
+        - docker
+    script:
+        - pip install coverage
+        - coverage run --source=.
+        - coverage xml
+    artifacts:
+        reports:
+            cobertura: coverage/coverage.xml

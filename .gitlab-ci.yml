@@ -8,8 +8,7 @@ coverage:
     tags:
         - docker
     script: |
-        files=(git diff-tree --no-commit-id --name-only -r $CI_COMMIT_SHA)
-        echo files
+        git diff-tree --no-commit-id --name-only -r $CI_COMMIT_SHA
     script: |
         pip install pytest
         pip install pytest-cov

@@ -7,10 +7,13 @@ coverage:
     stage: coverage
     tags:
         - docker
-    script:
-        - pip install coverage
-        - coverage run --source=.
-        - coverage xml
+    script: |
+        files=(git diff-tree --no-commit-id --name-only -r $CI_COMMIT_SHA)
+        echo files
+    script: |
+        pip install pytest
+        pip install pytest-cov
+        pytest --cov=src/ --cov-report xml:coverage/coverage.xml
     artifacts:
         reports:
             cobertura: coverage/coverage.xml

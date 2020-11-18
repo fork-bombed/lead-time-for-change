@@ -10,7 +10,7 @@ coverage:
     script: |
         pip install pytest
         pip install pytest-cov
-        pytest --cov=src/ --cov-report xml:coverage/coverage.xml
+        pytest --cov=src/ --cov-report xml:tools/coverage/coverage.xml
     artifacts:
         reports:
-            cobertura: coverage/coverage.xml
+            cobertura: tools/coverage/coverage.xml

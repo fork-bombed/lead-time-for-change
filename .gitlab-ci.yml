@@ -8,8 +8,9 @@ coverage:
     tags:
         - docker
     script: |
-        source env/bin/activate
-        python -m pytest --cov=src/ --cov-report xml:tools/coverage/coverage.xml
+        pip install pytest
+        pip install pytest-cov
+        python -m pytest --cov=src/ --cov-report xml:tools/coverage/coverage.xml 
     artifacts:
         reports:
             cobertura: tools/coverage/coverage.xml

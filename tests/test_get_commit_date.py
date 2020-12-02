@@ -1,6 +1,6 @@
 import pytest
 from github_api import get_commit_date
-
+import src.github_api
 def test_get_commit_date(monkeypatch):
     sample_commit = '''  
                         {

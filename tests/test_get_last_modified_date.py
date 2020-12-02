@@ -1,6 +1,5 @@
 import pytest
-from github_api import get_last_modified_date
-import src.github_api
+from import src.github_api import get_last_modified_date
 from datetime import datetime
 
 class TestGetLastModifiedDate:

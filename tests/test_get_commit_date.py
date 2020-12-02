@@ -98,5 +98,5 @@ def test_get_commit_date(monkeypatch):
 				}
 			  ]
 			}'''
-        monkeypatch.setattr(last_modified, sample_commit)
-        get_commit_date() == "Wed, 18 Nov 2020 10:24:29 GMT"
+    monkeypatch.setattr(last_modified, sample_commit)
+    get_commit_date() == "Wed, 18 Nov 2020 10:24:29 GMT"

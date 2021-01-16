@@ -8,6 +8,8 @@ stages:
     - test
 
 code_quality:
+    tags:
+        - codequality
     artifacts:
         paths: [gl-code-quality-report.json]
 

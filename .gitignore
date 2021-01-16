@@ -1,0 +1,9 @@
+.coverage
+.vscode
+__pycache__
+.pytest_cache
+env
+
+# Ignoring tokens/credentials
+token
+config.yaml

@@ -1,2 +1,27 @@
+image: python:latest
+
 include:
-        - template: Code-Quality.gitlab-ci.yml
+  - template: Code-Quality.gitlab-ci.yml
+
+stages:
+    - test
+    - coverage
+
+code_quality:
+    stage: test
+    services:   # removes docker-in-docker
+    tags:
+        - codeclimate
+    artifacts:
+        paths: [gl-code-quality-report.json]
+
+coverage:
+    stage: coverage
+    tags:
+        - docker
+    script: |
+        pip install -r requirements.txt
+        python -m pytest --cov=src/ --cov-report xml:tools/coverage/coverage.xml
+    artifacts:
+        reports:
+            cobertura: tools/coverage/coverage.xml

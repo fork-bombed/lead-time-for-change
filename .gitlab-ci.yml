@@ -1,13 +1,14 @@
-image: python:latest
+image: docker:stable
 
 include:
   - template: Code-Quality.gitlab-ci.yml
 
 stages:
-    - coverage
     - test
+    - coverage
 
 code_quality:
+    stage: test
     services:   # removes docker-in-docker
     tags:
         - codeclimate

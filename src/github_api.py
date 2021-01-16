@@ -1,45 +1,50 @@
-import github
 from datetime import datetime, timedelta
 
-def get_client() -> github.Github:
-    # temporarily store token in file
-    with open('token') as f:
-        token = f.read()
-    return github.Github(token)
+import commit
+import github
+import release
+import repository
 
 
-def get_last_modified_date(last_modified: str) -> datetime:
-    # in format `Wed, 18 Nov 2020 10:24:29 GMT`
-    return datetime.strptime(last_modified,'%a, %d %b %Y %H:%M:%S %Z')
+def get_lead_time(release: release.Release, repository: repository.Repository) -> timedelta:
+    # If there's only one release then get all the commits and compare 
+    # to the creation of the repository.
+    if len(repository.get_releases()) == 1:
+        commits = [
+            datetime.timestamp(commit.get_date()) - datetime.timestamp(repository.get_creation_time())
+            for commit in repository.get_commits()
+        ]
+    else:
+        previous_release = repository.get_releases()[1]
+        previous_created = previous_release.get_creation_time()
 
+        commits = [
+            datetime.timestamp(commit.get_date()) - datetime.timestamp(previous_created)
+            for commit in repository.get_commits() if commit.get_date() >= previous_created
+        ]
 
-def get_release_template(release: github.GitRelease.GitRelease, repo: github.Repository.Repository) -> str:
-    with open('template.md') as f:
-        template = f.read()
-    return template.format(
-        version     = release.tag_name,
-        lead_time   = get_lead_time_for_change(release, repo)
-        )
-
-
-def get_commit_date(commit: github.Commit.Commit) -> datetime:
-    return commit.commit.author.date
-
-
-def get_lead_time_for_change(release: github.GitRelease.GitRelease, repo: github.Repository.Repository) -> timedelta:
-    previous = repo.get_releases()[1]
-    created = previous.created_at
-    commits = [datetime.timestamp(get_commit_date(x))-datetime.timestamp(created) for x in repo.get_commits() if get_commit_date(x) >= created]
     return timedelta(seconds=sum(commits)/len(commits))
 
 
-def main():
-    client = get_client()
-    # will need to be passed in, can hardcode for testing
-    repo = client.get_user().get_repo('resgroup-prototype')
-    release = repo.get_latest_release()
-    release.update_release(name=release.title, message=get_release_template(release, repo))
+def get_release_template(release: release.Release, repo: repository.Repository) -> str:
+    with open("template.md") as file:
+        template = file.read()
+
+    return template.format(
+        version=release.get_tag_name(),
+        lead_time=get_lead_time(release, repo)
+    )
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    with open("token") as file:
+        token = file.read()
+
+    client = github.Github(token)
+    repository = client.get_repository("resgroup-prototype")
+    release = repository.get_latest_release()
+    release.update(
+        message=get_release_template(
+            release=release, repo=repository
+        )
+    )

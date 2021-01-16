@@ -4,12 +4,8 @@ import yaml
 
 CONFIG_NAME = 'config.yaml'
 
-def config_exists():
-    if os.path.isfile(CONFIG_NAME):
-        return True
-
 def create_config():
-    if config_exists():
+    if return os.path.isfile(CONFIG_NAME):
         ans = input('You already have already setup a config file, do you want to overwrite it? (Y/N): ')
         if ans.lower() == 'y':
             try:

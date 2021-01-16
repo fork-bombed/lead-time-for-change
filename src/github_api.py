@@ -7,13 +7,21 @@ import repository
 
 
 def get_lead_time(release: release.Release, repository: repository.Repository) -> timedelta:
-    previous_release = repository.get_releases()[1]
-    previous_created = datetime.strptime(previous_release.get_creation_time(), "%Y-%m-%dT%XZ")
+    # If there's only one release then get all the commits and compare 
+    # to the creation of the repository.
+    if len(repository.get_releases()) == 1:
+        commits = [
+            datetime.timestamp(commit.get_date()) - datetime.timestamp(repository.get_creation_time())
+            for commit in repository.get_commits()
+        ]
+    else:
+        previous_release = repository.get_releases()[1]
+        previous_created = previous_release.get_creation_time()
 
-    commits = [
-        datetime.timestamp(commit.get_date()) - datetime.timestamp(previous_created)
-        for commit in repository.get_commits() if commit.get_date() >= previous_created
-    ]
+        commits = [
+            datetime.timestamp(commit.get_date()) - datetime.timestamp(previous_created)
+            for commit in repository.get_commits() if commit.get_date() >= previous_created
+        ]
 
     return timedelta(seconds=sum(commits)/len(commits))
 

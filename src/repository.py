@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 import requests
@@ -18,17 +19,22 @@ class Repository:
             # Invalid Example: __repository
             setattr(self, f"_{self.__class__.__name__}__{key}", value)
 
+    def get_creation_time(self) -> datetime.strptime:
+        return datetime.strptime(self.__created_at, "%Y-%m-%dT%XZ")
+
     def get_commits(self) -> List[Commit]:
         response = self.__session.get(url=self.__commits_url.replace("{/sha}", ""))
-        # TODO: Handle exception where a release doesn't exist.
         return [Commit(data=data) for data in response.json()]
 
     def get_releases(self) -> List[Release]:
         response = self.__session.get(url=self.__releases_url.replace("{/id}", ""))
-        # TODO: Handle exception where a release doesn't exist.
         return [Release(session=self.__session, data=data) for data in response.json()]
 
     def get_latest_release(self) -> Release:
         response = self.__session.get(url=self.__releases_url.replace("{/id}", "/latest"))
-        # TODO: Handle exception where a release doesn't exist.
+        
+        if ("message" in response.json() and
+                response.json()["message"] == "Not Found"):
+                raise NameError("There are no releases on the chosen repository.")
+
         return Release(session=self.__session, data=response.json())

@@ -6,11 +6,13 @@ from repository import Repository
 
 
 class Github:
-    __username = None
     __base_url = "https://api.github.com"
     __session = requests.Session()
 
-    def __init__(self, token: str) -> None:
+    def __init__(self, token: str, base_url: str = None) -> None:
+        if base_url is not None:
+            self.__base_url = base_url
+
         self.__session.headers.update({"Authorization": f"Token {token}"})
         self.__check_token()
 

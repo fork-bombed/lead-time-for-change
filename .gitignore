@@ -5,4 +5,4 @@ __pycache__
 
 # Ignoring tokens/credentials
 token
-config.yml
+config.yaml

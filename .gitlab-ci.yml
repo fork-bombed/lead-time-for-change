@@ -8,8 +8,9 @@ stages:
     - test
 
 code_quality:
+    services:   # removes docker-in-docker
     tags:
-        - codequality
+        - codeclimate
     artifacts:
         paths: [gl-code-quality-report.json]
 

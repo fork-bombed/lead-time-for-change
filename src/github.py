@@ -1,5 +1,7 @@
-import requests
 import json
+
+import requests
+
 from repository import Repository
 
 

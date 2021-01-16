@@ -1,5 +1,6 @@
-import requests
 import json
+
+import requests
 
 
 class Release:
@@ -9,11 +10,13 @@ class Release:
 
         # Create variables from the data dictionary.
         for key, value in data.items():
-            # In order to create a private variable through setattr then we have to
-            # also use the class name. 
+            # In order to create a private variable through setattr then we have to also use the class name. 
             # Valid Example: __Release__release
             # Invalid Example: __release
             setattr(self, f"_{self.__class__.__name__}__{key}", value)
+
+    def get_creation_time(self) -> str:
+        return self.__created_at
 
     def get_tag_name(self) -> str:
         return self.__tag_name

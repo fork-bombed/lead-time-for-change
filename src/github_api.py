@@ -1,13 +1,14 @@
 from datetime import datetime, timedelta
+
+import commit
 import github
 import release
 import repository
-import commit
 
 
 def get_lead_time(release: release.Release, repository: repository.Repository) -> timedelta:
     previous_release = repository.get_releases()[1]
-    previous_created = datetime.strptime(previous_release["created_at"], "%Y-%m-%dT%XZ")
+    previous_created = datetime.strptime(previous_release.get_creation_time(), "%Y-%m-%dT%XZ")
 
     commits = [
         datetime.timestamp(commit.get_date()) - datetime.timestamp(previous_created)

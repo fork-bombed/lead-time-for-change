@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
-
 import commit
 import github
 import release
 import repository
+import yaml, os, sys
 
+CONFIG_NAME = "config.yaml"
 
 def get_lead_time(release: release.Release, repository: repository.Repository) -> timedelta:
     # If there's only one release then get all the commits and compare 
@@ -37,11 +38,12 @@ def get_release_template(release: release.Release, repo: repository.Repository) 
 
 
 if __name__ == "__main__":
-    with open("token") as file:
-        token = file.read()
-
-    client = github.Github(token)
-    repository = client.get_repository("resgroup-prototype")
+    if not os.path.isfile(f'../{CONFIG_NAME}'):
+        print(f'{CONFIG_NAME} not found')
+    with open(f'../{CONFIG_NAME}') as file:
+        CONFIG = yaml.safe_load(file)
+    client = github.Github(CONFIG.get('token'))
+    repository = client.get_repository(CONFIG.get('repo'))
     release = repository.get_latest_release()
     release.update(
         message=get_release_template(

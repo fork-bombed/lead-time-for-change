@@ -6,7 +6,6 @@ import commit
 
 
 def get_lead_time(release: release.Release, repository: repository.Repository) -> timedelta:
-    # TODO: Lead-time doesn't work.
     previous_release = repository.get_releases()[1]
     previous_created = datetime.strptime(previous_release["created_at"], "%Y-%m-%dT%XZ")
 

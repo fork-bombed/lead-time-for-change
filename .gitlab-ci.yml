@@ -1,7 +1,15 @@
 image: python:latest
 
+include:
+  - template: Code-Quality.gitlab-ci.yml
+
 stages:
     - coverage
+    - test
+
+code_quality:
+    artifacts:
+        paths: [gl-code-quality-report.json]
 
 coverage:
     stage: coverage

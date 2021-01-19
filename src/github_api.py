@@ -3,9 +3,7 @@ import commit
 import github
 import release
 import repository
-import yaml, os, sys
-
-CONFIG_NAME = "config.yaml"
+import os, sys
 
 def get_lead_time(release: release.Release, repository: repository.Repository) -> timedelta:
     # If there's only one release then get all the commits and compare 
@@ -28,7 +26,7 @@ def get_lead_time(release: release.Release, repository: repository.Repository) -
 
 
 def get_release_template(release: release.Release, repo: repository.Repository) -> str:
-    with open("template.md") as file:
+    with open('src/template.md') as file:
         template = file.read()
 
     return template.format(
@@ -38,12 +36,18 @@ def get_release_template(release: release.Release, repo: repository.Repository) 
 
 
 if __name__ == "__main__":
-    if not os.path.isfile(f'../{CONFIG_NAME}'):
-        print(f'{CONFIG_NAME} not found')
-    with open(f'../{CONFIG_NAME}') as file:
-        CONFIG = yaml.safe_load(file)
-    client = github.Github(CONFIG.get('token'))
-    repository = client.get_repository(CONFIG.get('repo'))
+    token = os.environ.get('GITHUB_TOKEN')
+    repo = os.environ.get('GITHUB_REPOSITORY')
+    if not token:
+        print('Token not found')
+        sys.exit(1)
+    if repo:
+        repo = repo.split('/')[-1]
+    else:
+        print('Repo not found')
+        sys.exit(1)
+    client = github.Github(token)
+    repository = client.get_repository(repo)
     release = repository.get_latest_release()
     release.update(
         message=get_release_template(

@@ -44,12 +44,12 @@ EXPECTED_DATE = datetime.strptime(EXPECTED_DATE_STRING, "%Y-%m-%dT%XZ")
 DATA_OBJECT = {"created_at": EXPECTED_DATE_STRING,
                "url": "latest_release['url']", 'tag_name': "sample_tagname"}
 
-def test_commit():
+def test_release():
     release = Release(session, DATA_OBJECT)
     assert release.get_tag_name() == DATA_OBJECT['tag_name'], "get_tag_name output did not match"
     assert release.get_creation_time() == EXPECTED_DATE, "get_creation_time output did not match"
-    # message = "Test release"
-    # release.update(message)
-    # all_releases = session.get(REPO_RELEASE_URL).json()
-    # latest_release = all_releases[0]
-    # assert latest_release['body'] == message, "Release updated message did not match"
+    #message = "Test release"
+    #release.update(message)
+    #all_releases = session.get(REPO_RELEASE_URL).json()
+    #latest_release = all_releases[0]
+    #assert latest_release['body'] == message, "Release updated message did not match"

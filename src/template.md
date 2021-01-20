@@ -1,4 +1,5 @@
 # Release Metrics ({version})
+
 **Lead time for change**: {lead_time}
 
 ## Release Notes

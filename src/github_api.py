@@ -41,9 +41,7 @@ if __name__ == "__main__":
     if not token:
         print('Token not found')
         sys.exit(1)
-    if repo:
-        repo = repo.split('/')[-1]
-    else:
+    if not repo:
         print('Repo not found')
         sys.exit(1)
     client = github.Github(token)

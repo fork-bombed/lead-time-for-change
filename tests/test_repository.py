@@ -41,7 +41,7 @@ DATA_OBJECT = {"created_at": EXPECTED_DATE_STRING,
                "commits_url": "REPO_COMMITS_URL", 'releases_url': "REPO_RELEASES_URL"}
 
 
-def test_repository():
+def test_get_creation_time():
     repo = Repository(session, DATA_OBJECT)
     # assert len(repo.get_commits()) == COMMITS_IN_PROJECT, "Commit's count doesnt match the expected value. " \
     #                                                          "(Remember, the github api may at max fetch 30 commits. " \
@@ -52,4 +52,22 @@ def test_repository():
 
     # latest_release = repo.get_latest_release()
     # assert latest_release.get_tag_name() == LATEST_RELEASE_TAG_NAME, "Latest release tag name is not the expected value"
+def test_get_commits():
+    try:
+        repo = Repository(session, DATA_OBJECT)
+        repo.get_commits()
+    except:
+        pass
 
+def test_get_releases():
+    try:
+        repo = Repository(session, DATA_OBJECT)
+        repo.get_releases()
+    except:
+        pass
+def get_latest_release():
+    try:
+        repo = Repository(sesion, DATA_OBJECT)
+        repo.get_latest_release()
+    except:
+        pass

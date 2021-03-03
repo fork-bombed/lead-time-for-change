@@ -37,7 +37,7 @@ session = requests.Session()
 
 EXPECTED_DATE_STRING = '2021-01-17T09:11:55Z'
 EXPECTED_DATE = datetime.strptime(EXPECTED_DATE_STRING, "%Y-%m-%dT%XZ")
-DATA_OBJECT = {"created_at": EXPECTED_DATE_STRING,
+DATA_OBJECT = {"created_at": EXPECTED_DATE_STRING, "full_name":"FULL_NAME",
                "commits_url": "REPO_COMMITS_URL", 'releases_url': "REPO_RELEASES_URL"}
 
 
@@ -52,6 +52,11 @@ def test_get_creation_time():
 
     # latest_release = repo.get_latest_release()
     # assert latest_release.get_tag_name() == LATEST_RELEASE_TAG_NAME, "Latest release tag name is not the expected value"
+
+def test_get_full_name():
+    repo = Repository(session, DATA_OBJECT)
+    assert repo.get_full_name() == "FULL_NAME"
+
 def test_get_commits():
     try:
         repo = Repository(session, DATA_OBJECT)
@@ -71,3 +76,4 @@ def get_latest_release():
         repo.get_latest_release()
     except:
         pass
+

@@ -32,6 +32,8 @@ def format_urlsafe_time(td: timedelta) -> str:
         out.append(f'{hours}h')
     if minutes > 0:
         out.append(f'{minutes}m')
+    if len(out)==0:
+        return '0'
     return '%20'.join(out)
 
 
@@ -64,6 +66,9 @@ def get_lead_time(
             datetime.timestamp(c.get_date()) - datetime.timestamp(prev_release.get_creation_time())
             for c in commits
         ]
+    # Stop disvision by zero
+    if len(commit_times)==0:
+        return timedelta(seconds=sum(commit_times))
     return timedelta(seconds=sum(commit_times)/len(commit_times))
 
 
@@ -82,19 +87,26 @@ def get_release_template(
         lead_time_colour = 'important'
     else:
         lead_time_colour = 'success'
-    prev_lead_time = get_lead_time(prev_release, repo)
-    if lead_time > prev_lead_time:
-        lead_time_difference = ''.join(['+',format_urlsafe_time(lead_time - prev_lead_time)])
-        lead_time_difference_colour = 'critical'
+    if prev_release:
+        prev_lead_time = get_lead_time(prev_release, repo)
+        prev_version = prev_release.get_tag_name()
+        if lead_time > prev_lead_time:
+            lead_time_difference = ''.join(['+',format_urlsafe_time(lead_time - prev_lead_time)])
+            lead_time_difference_colour = 'critical'
+        else:
+            lead_time_difference = ''.join(['--',format_urlsafe_time(prev_lead_time - lead_time)])
+            lead_time_difference_colour = 'success'
     else:
-        lead_time_difference = ''.join(['--',format_urlsafe_time(prev_lead_time - lead_time)])
-        lead_time_difference_colour = 'success'
+        prev_version = release.get_tag_name()
+        lead_time_difference = '0m'
+        lead_time_difference_colour = 'yellow'
+
 
     return template.format(
         version=release.get_tag_name(),
         lead_time=format_urlsafe_time(lead_time),
         lead_time_colour=lead_time_colour,
-        prev_version=prev_release.get_tag_name(),
+        prev_version=prev_version,
         repository=repo.get_full_name(),
         lead_time_difference=lead_time_difference,
         lead_time_difference_colour=lead_time_difference_colour
@@ -113,7 +125,12 @@ if __name__ == "__main__":
     client = github.Github(token)
     repository = client.get_repository(repo)
     release = repository.get_latest_release()
-    prev_release = repository.get_releases()[1]
+    releases = repository.get_releases()
+    if len(releases) > 1:
+        prev_release = releases[1]
+    else:
+        prev_release = None
+    print(prev_release)
     release.update(
         message=get_release_template(
             release=release, 

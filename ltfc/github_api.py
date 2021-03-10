@@ -9,11 +9,11 @@ import sys
 def get_commits_between_releases(
         release: release.Release, 
         last_release: release.Release, 
-        repository: repository.Repository
+        repo: repository.Repository
     ) -> [commit.Commit]:
 
     commits = []
-    for c in repository.get_commits():
+    for c in repo.get_commits():
         if (c.get_date() >= last_release.get_creation_time() and
                 c.get_date() <= release.get_creation_time()):
             commits.append(c)
@@ -39,16 +39,16 @@ def format_urlsafe_time(td: timedelta) -> str:
 
 def get_lead_time(
         release: release.Release,
-        repository: repository.Repository
+        repo: repository.Repository
     ) -> timedelta:
 
-    if len(repository.get_releases()) == 1:
+    if len(repo.get_releases()) == 1:
         commit_times = [
-            datetime.timestamp(c.get_date()) - datetime.timestamp(repository.get_creation_time())
-            for c in repository.get_commits()
+            datetime.timestamp(c.get_date()) - datetime.timestamp(repo.get_creation_time())
+            for c in repo.get_commits()
         ]
     else:
-        releases = repository.get_releases()
+        releases = repo.get_releases()
         release_index = None
         for index,r in enumerate(releases):
             if r.get_id() == release.get_id():
@@ -61,7 +61,7 @@ def get_lead_time(
                 return timedelta(seconds=0)
         else:
             return timedelta(seconds=0)
-        commits = get_commits_between_releases(release, prev_release, repository)
+        commits = get_commits_between_releases(release, prev_release, repo)
         commit_times = [
             datetime.timestamp(c.get_date()) - datetime.timestamp(prev_release.get_creation_time())
             for c in commits
@@ -123,9 +123,9 @@ if __name__ == "__main__":
         print('Repo not found')
         sys.exit(1)
     client = github.Github(token)
-    repository = client.get_repository(repo)
-    release = repository.get_latest_release()
-    releases = repository.get_releases()
+    repo = client.get_repository(repo)
+    release = repo.get_latest_release()
+    releases = repo.get_releases()
     if len(releases) > 1:
         prev_release = releases[1]
     else:
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     release.update(
         message=get_release_template(
             release=release, 
-            repo=repository,
+            repo=repo,
             prev_release=prev_release
         ) + f'\n{release.get_body_text()}'
     )

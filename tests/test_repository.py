@@ -3,7 +3,7 @@ from os import path
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
-srcDir = path.join(parentdir, "src")
+srcDir = path.join(parentdir, "ltfc")
 sys.path.insert(0, parentdir)
 sys.path.insert(0, srcDir)
 

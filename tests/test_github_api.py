@@ -3,7 +3,7 @@ from os import path
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
-srcDir = path.join(parentdir, "src")
+srcDir = path.join(parentdir, "ltfc")
 sys.path.insert(0, parentdir)
 sys.path.insert(0, srcDir)
 
@@ -127,7 +127,7 @@ def test_get_release_template():
     string = '{version} - {lead_time}'
     formatted_string = github_api.get_release_template(release, release, repo)
     if path.isfile("template.md"):
-        raise Exception("src/template.md is not found")
+        raise Exception("ltfc/template.md is not found")
     assert TAG_NAME in formatted_string, 'template string doesn\'t contain expected tag name: %s' % TAG_NAME
     # assert "0:00:40" in formatted_string, 'template string doesn\'t contain expected lead time: %s' % "0:00:40"
 

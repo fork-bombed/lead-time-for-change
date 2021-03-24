@@ -19,9 +19,6 @@ class Repository:
             # Invalid Example: __repository
             setattr(self, f"_{self.__class__.__name__}__{key}", value)
 
-    def get_full_name(self) -> str:
-        return self.__full_name
-
     def get_creation_time(self) -> datetime.strptime:
         return datetime.strptime(self.__created_at, "%Y-%m-%dT%XZ")
 

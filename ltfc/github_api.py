@@ -130,7 +130,6 @@ if __name__ == "__main__":
         prev_release = releases[1]
     else:
         prev_release = None
-    print(prev_release)
     release.update(
         message=get_release_template(
             release=release, 

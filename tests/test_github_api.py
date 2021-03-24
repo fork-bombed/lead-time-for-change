@@ -137,7 +137,7 @@ def test_get_release_template():
         (2, 4, 30, "2d%203h%2030m"),
         (2, 4, 0, "2d%204h"),
         (2, 0, 0, "2d"),
-        (0, 0, 0, "")
+        (0, 0, 0, "0m")
     ])
 def test_format_urlsafe_time(day, hour, minute, expected):
     d1 = datetime.now()

@@ -2,7 +2,7 @@
 
 Clone this repository
 ```bash
-git clone {URL} lead_time_for_change
+git clone https://github.com/fork-bombed/lead-time-for-change lead_time_for_change
 ```
 
 Once cloned, copy the `ltfc` folder to the root directory of your folder (named `my_repo` in this example)
